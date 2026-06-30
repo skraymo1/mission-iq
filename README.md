@@ -66,12 +66,57 @@ its operating instructions — no orchestration code changes. Ships with three:
                   Streamlit "Dispatch Cockpit"
 ```
 
-- **Orchestrator** — Microsoft Agent Framework agent on the `gpt-5.4` Foundry
+- **Orchestrator** — Microsoft Agent Framework on the `gpt-5.4` Foundry
   deployment, Entra ID auth (no keys).
-- **Planes** — pluggable tools. Today each serves a realistic seeded mirror with a
-  clean swap point to go live (Fabric `executeQueries` DAX / Foundry native
-  `get_fabric_tool`, Bing grounding, file-search RAG, Work IQ / Graph).
+- **Planes** — pluggable tools. The three seeded skins serve realistic local
+  mirrors so the app runs anywhere; the **live Fundraising skin** runs on real
+  Foundry connectors instead (see below).
 - **Actions** — stage outreach/tasks/workflows the human approves in the cockpit.
+
+### The live engine (Fundraising skin)
+
+The Fundraising skin doesn't reason over one big prompt — it runs a **team of
+narrow specialists** coordinated by an in-app **Magentic manager**
+(`StandardMagenticManager`) that plans, delegates, tracks a progress ledger, and
+synthesizes:
+
+| Specialist | Persisted as | Tool (server-side) |
+|---|---|---|
+| 🗄️ **DonorData** | `MissionIQ-DonorData` | Fabric Data Agent — donor & giving records |
+| 📄 **Policy** | `MissionIQ-Policy` | Azure AI Search — SOPs / guardrails |
+| 🌐 **Web** | `MissionIQ-Web` | Bing grounding — live external facts |
+| ✉️ **Action** | `MissionIQ-Action` | local action tools (draft / task / workflow) |
+
+Each specialist is a **persisted Foundry PromptAgent** (portal-visible) with its
+hosted tool lifted into the definition, so it hits the real source. The cockpit
+renders the manager's plan, ledger, and every specialist turn in a per-answer
+**orchestration drawer**, and lists the live team in the sidebar.
+
+---
+
+## Foundry footprint
+
+Mission IQ provisions real, portal-visible resources into the Foundry project
+(`provisioning only — the app itself is run locally`):
+
+- **5 PromptAgents** — the 4 specialists above plus `MissionIQ-Synthesizer`, an
+  instructions-only synthesis/action closer.
+- **1 Workflow** — `MissionIQ-Workflow`, a declarative CSDL **WorkflowAgentDefinition**
+  that consults the team **sequentially over one shared conversation**
+  (DonorData → Policy → Web → Synthesizer) and ends with one decision-ready answer
+  plus a drafted outreach message. It's the **portal-native twin** of the in-app
+  Magentic engine: the app is the dynamic brain; the Workflow is the governed,
+  portal-visible orchestration of the *same* persisted agents.
+
+```powershell
+# After `az login` to the Foundry tenant:
+.\.venv\Scripts\python.exe scripts\provision_foundry_agents.py     # the 4 specialists
+.\.venv\Scripts\python.exe scripts\provision_foundry_workflow.py   # synthesizer + workflow
+```
+
+Both scripts are **idempotent** (a new version is published only when a definition
+changes) and share one source of truth — `agents_spec.py` for the team,
+`workflow_spec.py` for the workflow.
 
 ---
 
@@ -88,25 +133,37 @@ streamlit run app.py
 ```
 
 Then pick a mission in the sidebar and click a sample question — or ask your own.
+See **[`docs/example-questions.md`](docs/example-questions.md)** for demo-ready
+prompts (app, Foundry Workflow, and the seeded skins) and a suggested demo arc.
 
 Configuration is optional; copy `.env.example` to `.env` to override the endpoint,
-model, or enable live web lookups.
+model, or enable live web lookups. To light up the live Fundraising skin's Foundry
+agents + workflow, run the two provisioning scripts in **Foundry footprint** above.
 
 ---
 
 ## Project layout
 
 ```
-app.py                      Streamlit Dispatch Cockpit
+app.py                      Streamlit Dispatch Cockpit (+ team sidebar & Magentic drawer)
 src/missioniq/
-  config.py                 endpoint / model / api-version settings
-  orchestrator.py           builds the Foundry agent + skin instructions
+  config.py                 endpoint / model / api-version + connector settings
+  orchestrator.py           builds the Foundry agent + skin instructions (seeded skins)
+  live.py                   live-skin engine: tenant-pinned credential + connector planes
+  magentic.py               in-app Magentic manager + per-answer trace (plan/ledger/turns)
+  agents_spec.py            source of truth for the 4 persisted specialists + manager
+  workflow_spec.py          source of truth for the declarative Foundry Workflow (CSDL)
   actions.py                draft_outreach / create_task / trigger_workflow
-  planes/                   fabric · web · docs · work (+ base run-context)
+  planes/                   fabric · fabric_live · web · docs · work (+ base run-context)
   skins/
     schema.py               the 5-slot Skin model + loader
     library/*.yaml          one file per mission skin
-data/<skin>/                seed records · web · docs · work per skin
+scripts/
+  provision_foundry_agents.py    publish the 4 specialists as PromptAgents
+  provision_foundry_workflow.py  publish MissionIQ-Synthesizer + MissionIQ-Workflow
+  build_search_index.py          load the policy/SOP docs into Azure AI Search
+data/<skin>/                seed records · web · docs · work per seeded skin
+docs/example-questions.md   demo-ready prompts + suggested demo arc
 ```
 
 ## Adding a skin
@@ -119,5 +176,7 @@ No code changes. The new mission shows up in the cockpit automatically.
 
 ---
 
-*Demo build. Data planes serve seeded mirrors by design so the app runs anywhere;
-each has a documented swap to its live Azure source.*
+*Demo build. The three seeded skins serve local mirrors so the app runs anywhere;
+the live **Fundraising** skin runs on real Foundry connectors and a persisted
+specialist team. Provisioning publishes agents + a workflow to the project — the
+app itself is run locally, not deployed.*
