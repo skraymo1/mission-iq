@@ -1,0 +1,32 @@
+id: fundraising
+name: Fundraising
+icon: "💝"
+accent: "#7c3aed"
+tagline: "Reach the right donor with the right ask before the window closes."
+entity: donors
+
+demand: >
+  Revenue goals and giving gaps by campaign — year-end targets, lapsed major
+  donors slipping away, and pledges that still need a personal ask.
+supply: >
+  Donors and prospects matched on giving capacity, engagement stage, affinity,
+  and recency — plus gift officers' time and the channels to reach each person.
+guardrails: >
+  Honor the gift acceptance policy, donor contact preferences and do-not-solicit
+  flags, anonymity requests, and stewardship cadence so no one is over-asked.
+impact: >
+  Dollars raised and pledges secured per gift-officer hour, and lift in retention
+  and reactivation for each segment touched.
+feedback: >
+  Open and response rates, gifts closed, and downgrade/lapse signals feed back to
+  re-rank who to reach next and how.
+
+sample_questions:
+  - "Which lapsed major donors should we reach before year-end?"
+  - "Who are our top untapped high-capacity prospects this quarter?"
+  - "Draft a personal year-end ask to our best lapsed donor."
+
+# Fundraising is the LIVE skin: its planes are backed by real Foundry connectors
+# (Fabric Data Agent over the gold fundraising lakehouse, Bing grounding for the
+# web, Azure AI Search over the stewardship docs) rather than seeded JSON.
+live: true

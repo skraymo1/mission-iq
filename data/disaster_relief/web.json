@@ -1,0 +1,10 @@
+{
+  "source": "Live web — traffic & weather (seeded snapshot)",
+  "as_of": "tonight, 6:40 PM CT",
+  "items": [
+    {"headline": "I-10 East closed at Beltway 8 due to high water", "detail": "Avoid I-10 E between downtown and Zone 5; use US-90 as alternate. Reopening ETA unknown.", "affects_zones": ["Zone 5", "Zone 6"], "severity": "high"},
+    {"headline": "Flash flood warning extended for Harris County until 11 PM", "detail": "Rapid rises on Brays Bayou; low-water crossings in Zone 3 impassable.", "affects_zones": ["Zone 3"], "severity": "high"},
+    {"headline": "Downtown surface streets clear", "detail": "Routes into Zone 4 (George R. Brown) reported open and passable as of 6:30 PM.", "affects_zones": ["Zone 4"], "severity": "low"},
+    {"headline": "Katy / Zone 5 access restricted", "detail": "Mandatory evacuation corridor; non-credentialed vehicles turned back at FM-1463.", "affects_zones": ["Zone 5"], "severity": "moderate"}
+  ]
+}

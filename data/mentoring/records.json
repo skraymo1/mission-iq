@@ -1,0 +1,16 @@
+{
+  "entity": "mentors",
+  "source": "Dynamics 365 → Fabric (Program Management) — seeded mirror",
+  "records": [
+    {"name": "Mr. Allen Brooks", "subjects": ["math", "algebra"], "languages": ["English", "Spanish"], "campus": "East", "distance_mi": 1.2, "availability": ["Tue PM", "Thu PM"], "cleared": true, "caseload": 2, "caseload_cap": 5},
+    {"name": "Ms. Rivera", "subjects": ["reading", "writing"], "languages": ["English", "Spanish"], "campus": "East", "distance_mi": 2.0, "availability": ["Mon PM", "Wed PM"], "cleared": true, "caseload": 4, "caseload_cap": 5},
+    {"name": "Dr. Chen", "subjects": ["science", "chemistry"], "languages": ["English", "Mandarin"], "campus": "West", "distance_mi": 6.5, "availability": ["Fri PM"], "cleared": true, "caseload": 1, "caseload_cap": 4},
+    {"name": "Coach Daniels", "subjects": ["math", "mentoring"], "languages": ["English"], "campus": "East", "distance_mi": 0.8, "availability": ["Tue PM", "Wed PM"], "cleared": false, "caseload": 0, "caseload_cap": 5},
+    {"name": "Ms. Okeke", "subjects": ["math", "science"], "languages": ["English"], "campus": "East", "distance_mi": 3.3, "availability": ["Thu PM"], "cleared": true, "caseload": 3, "caseload_cap": 5}
+  ],
+  "needs": [
+    {"student": "Jaylen T.", "grade": 9, "campus": "East", "flags": ["attendance dropping", "math failing"], "subject_need": "math", "urgency": "high"},
+    {"student": "Sofia M.", "grade": 10, "campus": "East", "flags": ["math slipping"], "subject_need": "math", "language": "Spanish", "urgency": "medium"},
+    {"student": "Andre P.", "grade": 9, "campus": "East", "flags": ["disengaged"], "subject_need": "math", "urgency": "medium"}
+  ]
+}

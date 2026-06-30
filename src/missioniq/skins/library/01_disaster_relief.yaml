@@ -1,0 +1,27 @@
+id: disaster_relief
+name: Disaster Relief
+icon: "🌀"
+accent: "#dc2626"
+tagline: "Get the right responders to the right place before the window closes."
+entity: volunteers
+
+demand: >
+  Shelter and medical needs by zone — intake surges, evacuee counts, and
+  triage backlogs that shift hour to hour as a storm moves through.
+supply: >
+  Volunteers and responders matched on skills, certifications, location, and
+  availability — plus cots, vehicles, and supplies.
+guardrails: >
+  Honor certification requirements, fatigue and hazard-exposure limits, road and
+  flood closures, and pair first-time volunteers with veterans.
+impact: >
+  Families sheltered and lives reached per responder-hour, and time-to-aid for
+  each affected zone.
+feedback: >
+  No-show rates, actual time-to-aid, and after-action outcomes feed back into the
+  next dispatch decision.
+
+sample_questions:
+  - "Who can I get to the Houston shelter tonight?"
+  - "There's a medical surge in Zone 4 — who's certified and closest?"
+  - "Draft an urgent callout to available drivers for tomorrow's supply run."

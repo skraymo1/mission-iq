@@ -1,0 +1,8 @@
+{
+  "source": "Work IQ — M365 (email, Teams, calendar) (seeded)",
+  "items": [
+    {"type": "email", "from": "TMC Blood Bank <bank@tmc-demo.org>", "subject": "Urgent: O- below 1.5 days", "snippet": "We're 12 O-negative units short for tomorrow morning's surgeries. Any donors you can mobilize tonight would help."},
+    {"type": "calendar", "from": "Programs", "subject": "Saturday community drive — 9 AM to 2 PM", "snippet": "Bayland Community Center. 6 beds, 3 phlebotomists. ~24 slots still open."},
+    {"type": "teams", "from": "Donor relations", "subject": "Lapsed donor push", "snippet": "Let's re-engage donors who haven't given in 60+ days but are now eligible."}
+  ]
+}

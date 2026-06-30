@@ -1,0 +1,8 @@
+{
+  "source": "Foundry IQ — Program policy docs (seeded)",
+  "documents": [
+    {"title": "Mentor Matching Policy", "snippet": "Only background-check-cleared mentors may be assigned to students. Match on subject need first, then language and campus proximity."},
+    {"title": "Caseload Guidelines", "snippet": "No mentor should exceed 5 active mentees. Prioritize high-urgency students (attendance + failing grade) for the next open slot."},
+    {"title": "Outreach Tone Guide", "snippet": "Intro messages should be warm and specific: name the student, the subject, the proposed time, and a single confirm action."}
+  ]
+}

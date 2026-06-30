@@ -1,0 +1,8 @@
+{
+  "source": "Work IQ — M365 (email, Teams, calendar) (seeded)",
+  "items": [
+    {"type": "email", "from": "East Campus Counselor <counselor@school-demo.org>", "subject": "Three students flagged this week", "snippet": "Jaylen, Sofia, and Andre are all slipping in math. Jaylen's attendance is the biggest concern. Can we get mentors matched?"},
+    {"type": "calendar", "from": "Program office", "subject": "Mentor availability — Tue/Thu PM", "snippet": "Most open mentor slots are Tuesday and Thursday afternoons on the east campus."},
+    {"type": "teams", "from": "Mentoring channel", "subject": "Clearance reminder", "snippet": "Coach Daniels' background check is still pending — not eligible for assignment yet."}
+  ]
+}

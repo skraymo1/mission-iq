@@ -1,0 +1,12 @@
+{
+  "source": "Fabric — gold fundraising lakehouse (dm_Constituent, offline fallback)",
+  "note": "Mirrors the live Fabric Data Agent shape; used only when the connector is unavailable.",
+  "records": [
+    {"ConstituentName": "Margaret Whitfield", "Email": "m.whitfield@example.org", "LifetimeDonationAmount": 248000, "EngagementStage": "Conversion", "LastGiftMonthsAgo": 11, "CapacityRange": "$1,000,000+", "ConstituentRating": "Exceptional", "AcquisitionChannel": "Major Gifts", "lapsed": true, "do_not_solicit": false},
+    {"ConstituentName": "Harold Investor Bcc", "Email": "h.bcc@example.org", "LifetimeDonationAmount": 192500, "EngagementStage": "Conversion", "LastGiftMonthsAgo": 10, "CapacityRange": "$500,000-$1,000,000", "ConstituentRating": "Exceptional", "AcquisitionChannel": "Gala", "lapsed": true, "do_not_solicit": false},
+    {"ConstituentName": "Priya Raman", "Email": "p.raman@example.org", "LifetimeDonationAmount": 145000, "EngagementStage": "Engagement", "LastGiftMonthsAgo": 13, "CapacityRange": "$250,000-$500,000", "ConstituentRating": "High", "AcquisitionChannel": "Direct Mail", "lapsed": true, "do_not_solicit": false},
+    {"ConstituentName": "Daniel Osei", "Email": "d.osei@example.org", "LifetimeDonationAmount": 98000, "EngagementStage": "Conversion", "LastGiftMonthsAgo": 9, "CapacityRange": "$100,000-$250,000", "ConstituentRating": "High", "AcquisitionChannel": "Event", "lapsed": true, "do_not_solicit": false},
+    {"ConstituentName": "Eleanor Voss", "Email": "e.voss@example.org", "LifetimeDonationAmount": 210000, "EngagementStage": "Conversion", "LastGiftMonthsAgo": 3, "CapacityRange": "$500,000-$1,000,000", "ConstituentRating": "Exceptional", "AcquisitionChannel": "Major Gifts", "lapsed": false, "do_not_solicit": false},
+    {"ConstituentName": "Anonymous Friend", "Email": "", "LifetimeDonationAmount": 175000, "EngagementStage": "Conversion", "LastGiftMonthsAgo": 12, "CapacityRange": "$1,000,000+", "ConstituentRating": "Exceptional", "AcquisitionChannel": "Major Gifts", "lapsed": true, "do_not_solicit": true}
+  ]
+}

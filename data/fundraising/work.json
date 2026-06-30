@@ -1,0 +1,9 @@
+{
+  "source": "Work IQ — recent email, Teams & calendar (seeded snapshot)",
+  "items": [
+    {"kind": "email", "from": "Board Chair", "subject": "Year-end push", "snippet": "Board has approved a $50,000 challenge match for new and lapsed major gifts through Dec 31 — let's make sure our best lapsed donors hear about it personally."},
+    {"kind": "meeting", "title": "Development team standup", "snippet": "Gift officers reported capacity to make ~25 personal asks before Dec 10; agreed to prioritize lapsed donors with $10K+ lifetime and High/Exceptional wealth ratings."},
+    {"kind": "email", "from": "Major donor (lapsed)", "subject": "Re: how did the spring program go?", "snippet": "Loved the impact report you sent in spring — would like to hear what's planned for next year before I decide on a gift."},
+    {"kind": "teams", "from": "Finance", "subject": "Securities gifts", "snippet": "Reminder: stock gifts need to be initiated by Dec 24 to settle before year-end — flag any major donor considering appreciated securities now."}
+  ]
+}

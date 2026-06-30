@@ -1,0 +1,10 @@
+{
+  "source": "Live web — giving trends & sector news (seeded snapshot)",
+  "as_of": "year-end, mid-December",
+  "items": [
+    {"headline": "Online year-end giving concentrated in final 3 days of December", "detail": "Sector benchmarks show roughly a third of December online revenue arrives Dec 29-31; mobile-optimized, single-click asks convert best.", "severity": "info"},
+    {"headline": "Tax-deduction deadline of December 31 drives major-gift timing", "detail": "Donors itemizing deductions must complete gifts by Dec 31; securities and DAF gifts need extra lead time to clear before the deadline.", "severity": "high"},
+    {"headline": "Corporate matching-gift programs reset annually", "detail": "Many employer match programs expire at calendar year-end; reminding donors to submit match requests can double a gift's impact.", "severity": "moderate"},
+    {"headline": "Giving Tuesday momentum carries into December appeals", "detail": "Donors who gave on Giving Tuesday show elevated response to a follow-up year-end ask within 3-4 weeks.", "severity": "low"}
+  ]
+}

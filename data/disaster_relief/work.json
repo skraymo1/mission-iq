@@ -1,0 +1,8 @@
+{
+  "source": "Work IQ — M365 (email, Teams, calendar) (seeded)",
+  "items": [
+    {"type": "email", "from": "Regional Ops <ops@redcross-demo.org>", "subject": "GRB shelter at 80% — need overnight coverage", "snippet": "George R. Brown is filling fast. We need EMT + intake overnight in Zone 4. Please confirm staffing by 8 PM."},
+    {"type": "teams", "from": "Dispatch channel", "subject": "Zone 5 access", "snippet": "Reminder: Katy corridor is credentials-only tonight. Don't send non-credentialed drivers that way."},
+    {"type": "calendar", "from": "Logistics", "subject": "Supply run — tomorrow 7 AM", "snippet": "Pallets of water + cots staged at Annex. Need two CDL drivers confirmed tonight."}
+  ]
+}
