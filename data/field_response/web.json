@@ -1,0 +1,11 @@
+{
+  "source": "Live web - outbreak, security & travel status (seeded snapshot)",
+  "as_of": "2026-07-01, 09:00 UTC",
+  "items": [
+    {"headline": "WHO declares cholera outbreak in Am Timan, Sila Province, Chad", "detail": "Rapidly rising case counts around Am Timan; WHO and health cluster calling for immediate epidemiology, WASH, and case-management surge. French-speaking teams required. Yellow Fever and cholera vaccination mandatory for the zone.", "affects": ["Chad", "Am Timan"], "severity": "high"},
+    {"headline": "Security advisory: West Darfur, Sudan escalated to Level 4 - no non-essential travel", "detail": "Armed clashes near El Fasher; movement severely restricted. Staff currently in the El Fasher area cannot safely depart for cross-border missions.", "affects": ["Sudan", "El Fasher", "West Darfur"], "severity": "high"},
+    {"headline": "Sudan-Chad border closed at Adre crossing", "detail": "The Adre land crossing between Sudan and eastern Chad is closed until further notice. No overland transit between Sudan and Chad; no commercial flights out of El Fasher before 7 July.", "affects": ["Sudan", "Chad", "Adre"], "severity": "high"},
+    {"headline": "N'Djamena international hub operational; Cameroon-Chad corridor open", "detail": "N'Djamena airport operating normally with connections from Yaounde and Maroua. The Cameroon-Chad road corridor via Kousseri is open and passable; onward road access toward Am Timan reported usable.", "affects": ["Chad", "Cameroon", "N'Djamena"], "severity": "low"},
+    {"headline": "Regional weather: seasonal rains beginning across the Sahel", "detail": "Early rains may slow overland movement toward Sila Province later in the week; air-then-road via N'Djamena is the most reliable route into Am Timan right now.", "affects": ["Chad", "Sahel"], "severity": "moderate"}
+  ]
+}

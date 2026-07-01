@@ -44,8 +44,12 @@ Every mission is the same engine with five pluggable slots:
 | **Feedback** | Outcomes that re-tune future priorities |
 
 Swapping a skin re-themes the assistant, re-points its data planes, and re-writes
-its operating instructions — no orchestration code changes. Ships with three:
-🌀 Disaster Relief · 🩸 Blood Drive · 🎓 Youth Mentoring.
+its operating instructions — no orchestration code changes. Ships with four seeded
+missions — 🌍 Field Response · 🌀 Disaster Relief · 🩸 Blood Drive · 🎓 Youth
+Mentoring — plus the live 💝 Fundraising skin. **Field Response** is the sharpest
+cross-source demo: the live Web plane can *override* the structured data (a
+border-closure/security escalation disqualifies the obvious internal pick), proving
+the app is more than a Fabric wrapper.
 
 ---
 
@@ -68,7 +72,7 @@ its operating instructions — no orchestration code changes. Ships with three:
 
 - **Orchestrator** — Microsoft Agent Framework on the `gpt-5.4` Foundry
   deployment, Entra ID auth (no keys).
-- **Planes** — pluggable tools. The three seeded skins serve realistic local
+- **Planes** — pluggable tools. The four seeded skins serve realistic local
   mirrors so the app runs anywhere; the **live Fundraising skin** runs on real
   Foundry connectors instead (see below).
 - **Actions** — stage outreach/tasks/workflows the human approves in the cockpit.
@@ -162,6 +166,7 @@ scripts/
   provision_foundry_agents.py    publish the 4 specialists as PromptAgents
   provision_foundry_workflow.py  publish MissionIQ-Synthesizer + MissionIQ-Workflow
   build_search_index.py          load the policy/SOP docs into Azure AI Search
+  load_field_response_warehouse.py  go-live loader: Field Response star schema (inert until run)
 data/<skin>/                seed records · web · docs · work per seeded skin
 docs/example-questions.md   demo-ready prompts + suggested demo arc
 ```
@@ -176,7 +181,7 @@ No code changes. The new mission shows up in the cockpit automatically.
 
 ---
 
-*Demo build. The three seeded skins serve local mirrors so the app runs anywhere;
+*Demo build. The four seeded skins serve local mirrors so the app runs anywhere;
 the live **Fundraising** skin runs on real Foundry connectors and a persisted
 specialist team. Provisioning publishes agents + a workflow to the project — the
 app itself is run locally, not deployed.*

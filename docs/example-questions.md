@@ -55,6 +55,23 @@ decision-ready answer with a drafted outreach message at the end.
 These run anywhere on built-in demo data, ideal when you want to show the
 **skinnable** story without touching Azure. Switch skins in the sidebar.
 
+**🌍 Field Response — the cross-source showcase** *(recommended hero demo)*
+
+A humanitarian medical-deployment skin where the **live web overrides the internal
+data** — the clearest proof the app is more than a Fabric wrapper.
+
+- **"There's a cholera outbreak in Am Timan, Chad — who can we deploy in 72 hours?"**
+- "Which epidemiologists are vaccinated, cleared, and free to deploy this week?"
+- "Draft a deployment offer to our top candidate for the Chad cholera response."
+
+> The money shot: on paper **Dr. Amara Okoye** (French, vaccinated, available) is the
+> obvious pick — but the Web plane reports her area (West Darfur, Sudan) just escalated
+> to a Level 4 advisory with the Adré border closed, so she *can't reach the zone in
+> the window*. The assistant instead surfaces **Dr. Lena Fischer** in Cameroon (open
+> N'Djamena corridor), excludes a candidate whose **Yellow Fever lapsed**, skips one on
+> mandatory post-rotation **rest**, and drafts the deployment offer. Fabric alone could
+> never do this — the answer changes because of live external conditions.
+
 **🌀 Disaster Relief**
 - "Who can I get to the Houston shelter tonight?"
 - "There's a medical surge in Zone 4 — who's certified and closest?"
@@ -74,8 +91,11 @@ These run anywhere on built-in demo data, ideal when you want to show the
 
 ## Suggested demo arc (≈5 min)
 
-1. **Open on the seeded Disaster Relief skin** — ask *"Who can I get to the Houston
-   shelter tonight?"* to land the scenario and the cross-source + action feel.
+1. **Open on the seeded 🌍 Field Response skin** — ask *"There's a cholera outbreak in
+   Am Timan, Chad — who can we deploy in 72 hours?"* Point out the obvious internal
+   pick, then let the **Web plane disqualify her** (border closed / Level 4) and the
+   assistant re-rank to the reachable candidate + draft the offer. This is the sharpest
+   "cross-source overrides the data agent" moment.
 2. **Switch to 💝 Fundraising (live)** — ask the year-end lapsed-donor question and
    open the **orchestration drawer** to reveal the Magentic plan + real specialist
    turns hitting Fabric / Search / Bing.

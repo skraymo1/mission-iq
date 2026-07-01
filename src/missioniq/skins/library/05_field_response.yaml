@@ -1,0 +1,37 @@
+id: field_response
+name: Field Response
+icon: "🌍"
+accent: "#0d9488"
+tagline: "Deploy the right medical team to the crisis before the window closes."
+entity: responders
+
+demand: >
+  Emergency medical missions by crisis — outbreak declarations, conflict-trauma
+  surges, and refugee-health needs that open fast and demand specific roles,
+  languages, and vaccinations within a tight deployment window.
+supply: >
+  Field clinicians and logisticians matched on specialty, languages, current
+  vaccinations, security clearance, and rotation availability — plus their current
+  location and how fast they can actually reach the crisis zone.
+guardrails: >
+  Require current mission-critical vaccinations and valid travel documents, honor
+  live security-advisory and border/no-fly limits, respect mandatory post-rotation
+  rest, and pair first-mission staff with veterans. Never deploy someone who cannot
+  legally, safely, or physically reach the zone in the window.
+impact: >
+  Patients reached and lives saved per clinician-week, and time-to-deploy for each
+  declared crisis — getting qualified people on the ground before the curve peaks.
+feedback: >
+  Deployment outcomes, no-shows, exposure and fatigue, and post-mission recovery
+  status feed back to re-rank who is truly ready for the next call.
+
+sample_questions:
+  - "There's a cholera outbreak in Am Timan, Chad — who can we deploy in 72 hours?"
+  - "Which epidemiologists are vaccinated, cleared, and free to deploy this week?"
+  - "Draft a deployment offer to our top candidate for the Chad cholera response."
+
+# Field Response ships on the seeded plane path so it runs anywhere with no
+# provisioning. The go-live swap is isolated: point its Fabric plane at a dedicated
+# gold warehouse (see scripts/load_field_response_warehouse.py) loaded from a real
+# Dynamics 365 workforce instance, then flip `live: true`.
+live: false

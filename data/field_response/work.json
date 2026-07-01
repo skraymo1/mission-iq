@@ -1,0 +1,8 @@
+{
+  "source": "Work IQ - M365 (email, Teams, calendar) (seeded)",
+  "items": [
+    {"type": "email", "from": "Emergency Desk <emergency@field-demo.org>", "subject": "Am Timan cholera - roster needed within 72h", "snippet": "Health cluster is asking for an epidemiologist and WASH capacity on the ground by Friday. Please confirm a deployable roster tonight. French required; YF + cholera vaccination mandatory for the zone."},
+    {"type": "teams", "from": "Field Security channel", "subject": "Do not route via Sudan", "snippet": "Reminder to all coordinators: West Darfur is Level 4 and the Adre crossing is closed. Do NOT plan any transit into Chad via Sudan. Route incoming staff through N'Djamena."},
+    {"type": "calendar", "from": "Operations", "subject": "Mobilization call - today 16:00 UTC", "snippet": "Lock the Am Timan deployment roster and logistics. Ahmed is already in N'Djamena and can receive the team; need epi + WASH confirmed before the call."}
+  ]
+}
