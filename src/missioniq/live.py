@@ -52,15 +52,23 @@ def build_foundry_client(settings: Settings) -> FoundryChatClient:
     )
 
 
-def connector_planes(settings: Settings) -> list[dict[str, str]]:
+def connector_planes(settings: Settings, skin: Skin | None = None) -> list[dict[str, str]]:
     """The live planes that are actually wired, for display + agent construction."""
+    if skin is not None and skin.id == "field_response":
+        fabric_detail = "field-staff readiness records"
+        docs_detail = "deployment SOPs & guardrails"
+        web_label, web_detail = "Web · Field Sitrep", "curated crisis snapshot (hybrid)"
+    else:
+        fabric_detail = "structured donor records"
+        docs_detail = "internal SOPs & policies"
+        web_label, web_detail = "Bing grounding", "live external web"
     planes = [
         {"id": "fabric", "icon": "🗄️", "label": "Fabric Data Agent",
-         "detail": "structured donor records", "wired": str(settings.has_fabric)},
+         "detail": fabric_detail, "wired": str(settings.has_fabric)},
         {"id": "docs", "icon": "📄", "label": "Azure AI Search",
-         "detail": "internal SOPs & policies", "wired": "True"},
-        {"id": "web", "icon": "🌐", "label": "Bing grounding",
-         "detail": "live external web", "wired": "True"},
+         "detail": docs_detail, "wired": "True"},
+        {"id": "web", "icon": "🌐", "label": web_label,
+         "detail": web_detail, "wired": "True"},
     ]
     return planes
 

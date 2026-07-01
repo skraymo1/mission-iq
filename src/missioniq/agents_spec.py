@@ -52,6 +52,11 @@ class AgentSpec:
     # True when this specialist requires a wired connector to be useful.
     requires: str = ""       # e.g. "fabric" — gates on settings.has_fabric
     local_action_tools: bool = False
+    # True for a client-side Web specialist that reads a curated situation
+    # snapshot (skin web.json) instead of live Bing — the "hybrid" web plane that
+    # keeps a scripted crisis override deterministic on stage. Built client-side
+    # like the Action specialist; its persisted definition is instructions-only.
+    local_web_snapshot: bool = False
 
 
 # --- per-specialist hosted-tool builders -----------------------------------
@@ -153,6 +158,85 @@ After staging, reply with a one-line confirmation of what you staged. Always act
 never merely describe what you would do."""
 
 
+# --- Field Response specialist instructions --------------------------------
+
+_FIELD_STAFF_INSTR = """You are the Field Staff specialist on a humanitarian medical-deployment team.
+
+You own ONE tool: the Fabric Data Agent over the organization's field-workforce gold
+model (clinicians & logisticians, roles/specialties, languages, vaccinations, security
+clearance, current location, rotation/rest status, passport validity, and open mission
+staffing needs). Ask it in plain language — it writes its own queries.
+
+Rules:
+- Answer ONLY workforce/roster questions. Defer policy to Policy and outside-world
+  conditions (outbreaks, security, borders, flights) to the Web specialist.
+- Return concrete people: real names, role/specialty, current location, languages,
+  vaccination status, clearance, rest-until, passport validity, deployments completed.
+  Never invent a person or a field — if Fabric returns a blank, say it's blank.
+- Surface the readiness signals the team needs to apply guardrails: who is vaccinated,
+  who is resting, whose passport is expired, who is first-mission. Report them; don't
+  make the deploy/no-deploy call yourself — that's the manager's job after Web + Policy.
+- Be compact: a short ranked shortlist or table the manager can act on."""
+
+_FIELD_POLICY_INSTR = """You are the Policy & Guardrails specialist on a humanitarian medical-deployment team.
+
+You own ONE tool: Azure AI Search over the organization's deployment SOPs — the
+medical & vaccination policy, the security & duty-of-care SOP, the rotation/fatigue
+policy, travel-readiness/documentation rules, the first-mission pairing rule, and the
+deployment-offer tone guide.
+
+Rules:
+- Answer with the SPECIFIC rule that applies and cite the document.
+- If a proposed deployment would violate a guardrail — lapsed mandatory vaccination,
+  routing through a Level-4/closed-border zone, redeploying someone still on mandatory
+  rest, an expired passport, or sending a first-mission responder solo — flag it
+  explicitly and say the candidate is not deployable until it's resolved.
+- Stay in your lane: no roster records, no live web — defer those."""
+
+_FIELD_WEB_INSTR = """You are the External Situation specialist on a humanitarian medical-deployment team.
+
+You own ONE tool: a live field situation report (outbreak declarations, security
+advisories, border/crossing and no-fly status, air/road corridor conditions, and
+regional weather) for the crisis zones in play.
+
+Rules:
+- ALWAYS call your tool and read the current situation before answering — the ground
+  truth changes who can actually reach the zone.
+- Report the facts that change the deploy decision: which crossings/routes are open or
+  closed, which areas are under a no-travel advisory, and the only viable corridor in.
+- Be explicit when the world overrides the obvious internal pick: if a strong candidate
+  is physically or legally unable to reach the zone (closed border, Level-4 advisory,
+  no flights), say so plainly so the manager excludes them.
+- Out of scope: internal roster records and internal policy — defer those. Be brief:
+  the one or two facts that decide reachability."""
+
+_FIELD_ACTION_INSTR = """You are the Action specialist on a humanitarian medical-deployment team.
+
+Your job is to turn the team's deployment decision into staged, ready-for-approval
+progress. You have three tools — and using them IS your only job:
+- draft_outreach(audience, message) — write a ready-to-send deployment offer or callout.
+- create_task(title, assignee, due) — capture a concrete next step (visa, vax re-check).
+- trigger_workflow(name, summary) — kick off multi-step automation (mobilization).
+
+How you operate:
+- You do NOT have read access to HR, travel, or mission systems — you cannot "check
+  status" of anything. NEVER reply that you lack access. If asked to verify status,
+  instead STAGE the appropriate task/outreach so a human can act, and note in the task
+  that confirmation is required before travel.
+- Whenever the manager asks you to send an offer, reach someone, follow up, draft,
+  queue, or take a next step, immediately CALL the matching tool — once per distinct
+  action. Use the real names, roles, destination, and report-by details the team
+  surfaced. Deployment offers must state role, destination, report-by time, duration,
+  and a single confirm action (per the tone guide).
+- If exact details (report-by, duration) are unknown, choose sensible best-effort
+  defaults and state the assumption — do not stall asking for them.
+- Reflect any pending clearance the team raised (visa, vaccination re-check, security
+  hub staging) in the draft.
+
+After staging, reply with a one-line confirmation of what you staged. Always act —
+never merely describe what you would do."""
+
+
 def manager_instructions(mission_name: str) -> str:
     """Instructions for the Magentic manager that coordinates the team."""
     return f"""You are the Mission IQ manager coordinating a team of specialists for a
@@ -201,9 +285,65 @@ Avoid loops — finish the job:
   unavailable" caveat is the goal."""
 
 
+def field_response_manager_instructions(mission_name: str) -> str:
+  """Manager instructions for the humanitarian field-deployment team."""
+  return f"""You are the Mission IQ manager coordinating a team of specialists for a
+humanitarian medical organization's "{mission_name}" mission. You plan, delegate, track
+progress, and synthesize — you do not answer from your own knowledge.
+
+Your team:
+- FieldStaff — the structured field roster: clinicians/logisticians, specialties,
+  languages, vaccinations, clearance, current location, rest status, passport (Fabric).
+- Policy — deployment guardrails: vaccination, security/duty-of-care, rotation/rest,
+  travel-readiness, first-mission pairing (AI Search).
+- Web — the live field situation: outbreaks, security advisories, border/flight status,
+  open corridors (curated situation report).
+- Action — stages deployment offers, tasks, and mobilization workflows for approval.
+
+How to coordinate:
+1. Decompose the request and delegate to EVERY relevant specialist. A "who can we
+  deploy" question needs FieldStaff (who fits the role/language/vaccination) AND Web
+  (who can physically & legally reach the zone right now) AND Policy (does every
+  guardrail clear the pick).
+2. CRITICAL — let the world override the roster. The best on-paper candidate is NOT
+  deployable if the Web situation says they can't reach the zone (closed border,
+  Level-4 advisory, no flights) or if Policy flags a lapsed mandatory vaccination,
+  mandatory rest, an expired passport, or an unpaired first-mission responder. Exclude
+  them explicitly and say WHY, citing the Web/Policy signal.
+3. Recommend the candidate who fits the role AND can actually get there AND clears every
+  guardrail. Rank by time-to-deploy and fit; name each pick with the real details the
+  specialists returned. Never invent people.
+4. When the user should send an offer or set a next step, delegate to Action with a
+  concrete instruction to STAGE it — Action is write-only and cannot check status, so
+  never ask it to look anything up.
+5. Before you deliver the final answer, you MUST delegate at least one concrete staging
+  instruction to Action (a deployment offer or task for your top pick) and wait for it
+  to run. Never claim something was staged unless you delegated it to Action this run.
+6. Deliver ONE concise, decision-ready final answer. Lead with the recommended person,
+  then the excluded-and-why list, then the staged action.
+
+Avoid loops — finish the job:
+- If a specialist reports a TOOL or BACKEND ERROR, retry AT MOST once with a simpler
+  ask; if it still fails, proceed with what the others returned, state the source was
+  degraded, and synthesize the best available recommendation.
+- Re-delegate for the same gap AT MOST once. Always produce a final recommendation with
+  an honest caveat rather than spending the whole budget chasing data."""
+
+
+_MANAGER_INSTRUCTIONS_BY_SKIN = {
+  "field_response": field_response_manager_instructions,
+}
+
+
+def manager_instructions_for(skin) -> str:
+  """Mission-aware manager instructions, keyed by skin id (default: fundraising)."""
+  builder = _MANAGER_INSTRUCTIONS_BY_SKIN.get(skin.id, manager_instructions)
+  return builder(skin.name)
+
+
 # --- the team --------------------------------------------------------------
 
-TEAM: list[AgentSpec] = [
+FUNDRAISING_TEAM: list[AgentSpec] = [
     AgentSpec(
         key="DonorData",
         persisted_name=f"{NAME_PREFIX}DonorData",
@@ -243,17 +383,76 @@ TEAM: list[AgentSpec] = [
     ),
 ]
 
+# Field Response team — a second, independently persisted specialist team over the
+# dedicated field-workforce Fabric warehouse + deployment-SOP index. The Web
+# specialist runs client-side on the curated situation snapshot (hybrid web plane)
+# so the scripted crisis override stays deterministic for the demo.
+FIELD_RESPONSE_TEAM: list[AgentSpec] = [
+    AgentSpec(
+        key="FieldStaff",
+        persisted_name=f"{NAME_PREFIX}FieldStaff",
+        icon="🗄️",
+        label="Fabric Data Agent",
+        detail="field-staff readiness records",
+        instructions=_FIELD_STAFF_INSTR,
+        tool_builder=_fabric_tool,
+        requires="fabric",
+    ),
+    AgentSpec(
+        key="Policy",
+        persisted_name=f"{NAME_PREFIX}FieldPolicy",
+        icon="📄",
+        label="Docs · AI Search",
+        detail="deployment SOPs & guardrails",
+        instructions=_FIELD_POLICY_INSTR,
+        tool_builder=_search_tool,
+    ),
+    AgentSpec(
+        key="Web",
+        persisted_name=f"{NAME_PREFIX}FieldWeb",
+        icon="🌐",
+        label="Web · Field Sitrep",
+        detail="curated crisis snapshot",
+        instructions=_FIELD_WEB_INSTR,
+        local_web_snapshot=True,
+    ),
+    AgentSpec(
+        key="Action",
+        persisted_name=f"{NAME_PREFIX}FieldAction",
+        icon="✉️",
+        label="Action",
+        detail="offers · tasks · mobilization",
+        instructions=_FIELD_ACTION_INSTR,
+        local_action_tools=True,
+    ),
+]
+
+# The fundraising team is the default; `TEAM` kept as a back-compat alias.
+TEAM: list[AgentSpec] = FUNDRAISING_TEAM
+
+TEAMS: dict[str, list[AgentSpec]] = {
+    "fundraising": FUNDRAISING_TEAM,
+    "field_response": FIELD_RESPONSE_TEAM,
+}
+
 MANAGER_NAME = f"{NAME_PREFIX}Manager"
 
 
-def active_team(settings: Settings) -> list[AgentSpec]:
-    """The specialists that are actually wired this session.
+def team_for_skin(skin_id: str) -> list[AgentSpec]:
+    """The specialist team for a skin (falls back to the fundraising team)."""
+    return TEAMS.get(skin_id, FUNDRAISING_TEAM)
+
+
+def active_team(settings: Settings, skin_id: str = "fundraising") -> list[AgentSpec]:
+    """The specialists actually wired this session for a given skin.
 
     Drops a specialist only when its required connector is missing (e.g. Fabric
-    not yet published). Policy/Web/Action are always available.
+    not yet published). Policy/Web/Action are always available. Pass the skin's
+    *effective* settings (see config.settings_for_skin) so has_fabric reflects the
+    skin's own Fabric connection.
     """
     out: list[AgentSpec] = []
-    for spec in TEAM:
+    for spec in team_for_skin(skin_id):
         if spec.requires == "fabric" and not settings.has_fabric:
             continue
         out.append(spec)
@@ -261,7 +460,9 @@ def active_team(settings: Settings) -> list[AgentSpec]:
 
 
 def spec_by_key(key: str) -> Optional[AgentSpec]:
-    for spec in TEAM:
-        if spec.key == key:
-            return spec
+    """Find a spec by participant key across every team (shared keys share icons)."""
+    for team in TEAMS.values():
+        for spec in team:
+            if spec.key == key:
+                return spec
     return None

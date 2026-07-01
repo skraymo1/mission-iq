@@ -32,12 +32,13 @@ from .agents_spec import (
     AgentSpec,
     MANAGER_NAME,
     active_team,
-    manager_instructions,
+    manager_instructions_for,
     spec_by_key,
 )
-from .config import Settings
+from .config import Settings, settings_for_skin
 from .live import build_credential, build_foundry_client, make_attribution_middleware
 from .planes.base import AgentTurn, MagenticTrace, RunContext
+from .planes.web import make_situation_tool
 from .skins.schema import Skin
 
 DEBUG = os.getenv("MISSIONIQ_MAGENTIC_DEBUG", "0") == "1"
@@ -69,6 +70,17 @@ def build_participant(
             instructions=spec.instructions,
             tools=make_action_tools(skin, ctx),
         )
+    if spec.local_web_snapshot:
+        # Hybrid web plane: a client-side agent over the curated situation
+        # snapshot (skin web.json) so the scripted crisis override is
+        # deterministic on stage. Its persisted definition (portal) is
+        # instructions-only; the snapshot tool is attached client-side here.
+        client = build_foundry_client(settings)
+        return client.as_agent(
+            name=spec.key,
+            instructions=spec.instructions,
+            tools=[make_situation_tool(skin)],
+        )
     return FoundryAgent(
         project_endpoint=settings.project_endpoint,
         agent_name=spec.persisted_name,
@@ -84,15 +96,20 @@ def build_manager_agent(skin: Skin, settings: Settings):
     client = build_foundry_client(settings)
     return client.as_agent(
         name=MANAGER_NAME,
-        instructions=manager_instructions(skin.name),
+        instructions=manager_instructions_for(skin),
     )
 
 
 def build_workflow(skin: Skin, ctx: RunContext, settings: Settings):
-    """Assemble the Magentic workflow over the active specialist team."""
+    """Assemble the Magentic workflow over the active specialist team.
+
+    `settings` must already be the skin's effective settings (see
+    config.settings_for_skin) so connector specialists resolve the right Fabric
+    connection / docs index and team selection matches the skin.
+    """
     participants = [
         build_participant(spec, skin, ctx, settings)
-        for spec in active_team(settings)
+        for spec in active_team(settings, skin.id)
     ]
     manager = build_manager_agent(skin, settings)
     return MagenticBuilder(
@@ -140,19 +157,6 @@ def _icon_for(name: str) -> str:
     return spec.icon if spec else "🧠"
 
 
-# Each connector specialist owns exactly one plane. The per-turn attribution
-# middleware records which hosted tool fired on the Responses path, but persisted
-# Foundry agents (Agents API) surface a different raw shape, so that signal can be
-# silent here. We therefore also attribute at the *agent* grain: if a connector
-# specialist contributed a substantive turn, its one plane was used. Labels match
-# `live._PLANE_BY_ITEM` exactly so the two paths dedup cleanly via `ctx.touch`.
-_SOURCE_BY_KEY: dict[str, tuple[str, str, str]] = {
-    "DonorData": ("Fabric Data Agent", "🗄️", "structured donor records"),
-    "Policy": ("Docs · AI Search", "📄", "internal SOPs & policies"),
-    "Web": ("Web · Bing", "🌐", "live external web"),
-}
-
-
 def _handle_orchestrator(data: MagenticOrchestratorEvent, trace: MagenticTrace) -> None:
     et = data.event_type
     content = data.content
@@ -192,6 +196,8 @@ async def run_magentic(
     """
     trace = MagenticTrace()
     ctx.magentic = trace
+    # Resolve the skin's live resources (Fabric connection / docs index / team).
+    settings = settings_for_skin(settings, skin.id)
     workflow = build_workflow(skin, ctx, settings)
 
     final_text = ""
@@ -237,16 +243,16 @@ async def run_magentic(
                 list_by_author[author] = txt
 
     # Record each specialist that actually contributed, in team order. Prefer the
-    # delta-assembled text; fall back to the completed-list text. For connector
-    # specialists, attribute their owning plane to ctx.sources (the middleware's
-    # per-turn signal can be silent on the persisted-agent path).
-    for spec in active_team(settings):
+    # delta-assembled text; fall back to the completed-list text. For every data
+    # specialist (not the write-only Action), attribute its owning plane to
+    # ctx.sources from the spec itself — the middleware's per-turn signal can be
+    # silent on the persisted-agent path, and this keeps labels skin-correct.
+    for spec in active_team(settings, skin.id):
         txt = parts_by_author.get(spec.key) or list_by_author.get(spec.key)
         if txt and txt.strip():
             trace.turns.append(AgentTurn(name=spec.key, icon=spec.icon, text=txt.strip()))
-            source = _SOURCE_BY_KEY.get(spec.key)
-            if source:
-                ctx.touch(*source)
+            if not spec.local_action_tools:
+                ctx.touch(spec.label, spec.icon, spec.detail)
 
     # The manager streams its final synthesis as deltas too; if no explicit output
     # event carried text, fall back to the orchestrator's assembled text.

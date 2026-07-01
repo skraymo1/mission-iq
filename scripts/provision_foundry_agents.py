@@ -13,15 +13,16 @@ participants the in-app Magentic orchestration drives at runtime.
 from __future__ import annotations
 
 import asyncio
+import os
 import sys
 
 from azure.ai.projects import AIProjectClient
 from azure.ai.projects.models import PromptAgentDefinition
 from agent_framework.foundry import FoundryChatClient, to_prompt_agent
 
-from missioniq.config import load_settings
+from missioniq.config import load_settings, settings_for_skin
 from missioniq.live import build_credential
-from missioniq.agents_spec import TEAM, AgentSpec
+from missioniq.agents_spec import TEAMS, AgentSpec
 
 
 def _build_definition(spec: AgentSpec, settings) -> PromptAgentDefinition:
@@ -81,39 +82,56 @@ def _tool_summary(definition: PromptAgentDefinition) -> str:
 
 
 async def main() -> int:
-    settings = load_settings()
+    base = load_settings()
+
+    # Which mission team(s) to persist. Default: fundraising (back-compat).
+    #   MISSIONIQ_TEAM=fundraising | field_response | all
+    which = os.getenv("MISSIONIQ_TEAM", "fundraising").strip().lower()
+    if which == "all":
+        skin_ids = list(TEAMS.keys())
+    elif which in TEAMS:
+        skin_ids = [which]
+    else:
+        print(f"Unknown MISSIONIQ_TEAM={which!r}; valid: {', '.join(TEAMS)} or 'all'.")
+        return 2
+
     project = AIProjectClient(
-        endpoint=settings.project_endpoint,
-        credential=build_credential(settings),
+        endpoint=base.project_endpoint,
+        credential=build_credential(base),
         allow_preview=True,
     )
 
-    print(f"Project: {settings.project_endpoint}")
-    print(f"Model:   {settings.model}")
-    print(f"Fabric wired: {settings.has_fabric}\n")
+    print(f"Project: {base.project_endpoint}")
+    print(f"Model:   {base.model}")
+    print(f"Teams:   {', '.join(skin_ids)}\n")
 
     created, skipped = 0, 0
-    for spec in TEAM:
-        # Skip Fabric specialist's hosted tool if Fabric isn't wired, but still
-        # publish the agent (instructions-only) so the team is complete.
-        definition = _build_definition(spec, settings)
+    for skin_id in skin_ids:
+        # Effective settings resolve this mission's own Fabric connection + docs
+        # index so each specialist's hosted tool points at the right resource.
+        settings = settings_for_skin(base, skin_id)
+        print(f"── {skin_id}  (fabric: {settings.has_fabric}, "
+              f"index: {settings.search_index_name}) ──")
+        for spec in TEAMS[skin_id]:
+            definition = _build_definition(spec, settings)
 
-        prev = _latest_instructions(project, spec.persisted_name)
-        if prev is not None and prev.strip() == spec.instructions.strip():
-            print(f"= {spec.persisted_name:24s} unchanged — skipping  [{_tool_summary(definition)}]")
-            skipped += 1
-            continue
+            prev = _latest_instructions(project, spec.persisted_name)
+            if prev is not None and prev.strip() == spec.instructions.strip():
+                print(f"= {spec.persisted_name:26s} unchanged — skipping  [{_tool_summary(definition)}]")
+                skipped += 1
+                continue
 
-        version = project.agents.create_version(
-            spec.persisted_name,
-            definition=definition,
-            description=f"Mission IQ {spec.key} specialist — {spec.detail}",
-        )
-        ver = getattr(version, "version", None) or getattr(version, "id", "?")
-        print(f"+ {spec.persisted_name:24s} published v{ver}  [{_tool_summary(definition)}]")
-        created += 1
+            version = project.agents.create_version(
+                spec.persisted_name,
+                definition=definition,
+                description=f"Mission IQ {spec.key} specialist — {spec.detail}",
+            )
+            ver = getattr(version, "version", None) or getattr(version, "id", "?")
+            print(f"+ {spec.persisted_name:26s} published v{ver}  [{_tool_summary(definition)}]")
+            created += 1
+        print()
 
-    print(f"\nDone. {created} published, {skipped} unchanged.")
+    print(f"Done. {created} published, {skipped} unchanged.")
     print("\nPersisted agents in project:")
     for a in project.agents.list(kind="prompt"):
         nm = getattr(a, "name", "?")

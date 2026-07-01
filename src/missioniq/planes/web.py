@@ -57,3 +57,31 @@ def make_web_tool(skin: Skin, ctx: RunContext) -> Callable[..., str]:
         "answer depends on what is happening right now in the outside world."
     )
     return web_lookup
+
+
+def make_situation_tool(skin: Skin) -> Callable[..., str]:
+    """A client-side 'field situation report' tool for the hybrid Web specialist.
+
+    The Field Response Web specialist runs client-side over this curated crisis
+    snapshot (skin web.json) instead of live Bing, so the scripted outbreak /
+    border-closure / advisory override lands deterministically on stage. Source
+    attribution is recorded by the Magentic orchestrator at the agent grain, so
+    this tool does not touch the RunContext itself (avoids double-counting).
+    """
+    snapshot = load_data(skin.id, "web")
+
+    def field_situation_report(
+        zone: Annotated[
+            str,
+            Field(description="Crisis zone or country to check, e.g. 'Chad' or 'Am Timan'."),
+        ] = "",
+    ) -> str:
+        return json.dumps(snapshot, indent=2)
+
+    field_situation_report.__doc__ = (
+        "Get the current field situation report for the crisis zones in play — "
+        "outbreak declarations, security advisories, border/crossing and no-fly "
+        "status, open air/road corridors, and regional weather. ALWAYS call this "
+        "before judging whether a candidate can actually reach the zone."
+    )
+    return field_situation_report

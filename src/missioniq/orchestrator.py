@@ -14,7 +14,7 @@ from azure.identity import DefaultAzureCredential
 from agent_framework.openai import OpenAIChatClient
 
 from .actions import make_action_tools
-from .config import Settings
+from .config import Settings, settings_for_skin
 from .live import (
     build_foundry_client,
     build_live_agent,
@@ -123,7 +123,8 @@ async def run_turn(skin: Skin, ctx: RunContext, settings: Settings, clients: Cli
         engine = os.getenv("MISSIONIQ_ENGINE", "magentic").strip().lower()
         if engine == "magentic":
             return await run_magentic(skin, ctx, settings, question)
-        agent = build_live_agent(skin, ctx, settings, clients.foundry)
+        eff = settings_for_skin(settings, skin.id)
+        agent = build_live_agent(skin, ctx, eff, clients.foundry)
         result = await agent.run(question)
         return result.text
 

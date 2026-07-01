@@ -16,7 +16,8 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from missioniq.agents_spec import MANAGER_NAME, active_team  # noqa: E402
-from missioniq.config import load_settings  # noqa: E402
+from missioniq.config import load_settings, settings_for_skin  # noqa: E402
+from missioniq.connections_map import build_connections_dot  # noqa: E402
 from missioniq.live import connector_planes  # noqa: E402
 from missioniq.orchestrator import Clients, run_turn  # noqa: E402
 from missioniq.planes import RunContext  # noqa: E402
@@ -43,6 +44,57 @@ def _skins():
 settings = _settings()
 skins = _skins()
 
+
+# ---------------------------------------------- connection-map (architecture)
+def render_connections(skin, settings) -> None:
+    """The 'how it's connected' screen — a live architecture map for the audience."""
+    eff = settings_for_skin(settings, skin.id)
+    st.markdown(f"### 🔌 How {skin.name} is connected")
+    if skin.live:
+        st.caption(
+            "Each specialist owns exactly one connector. The manager (gpt-5.4) plans, "
+            "delegates, and synthesizes across them — the Magentic pattern over real "
+            "Foundry-persisted agents."
+        )
+    else:
+        st.caption(
+            "This mission runs on the seeded plane path — one agent over local demo "
+            "data, so it runs anywhere with no provisioning. Flip it live to swap "
+            "these files for real Foundry connectors."
+        )
+
+    st.graphviz_chart(build_connections_dot(skin, eff), use_container_width=True)
+
+    # Legend
+    st.markdown(
+        "<span style='background:#dcfce7;color:#065f46;padding:2px 8px;border-radius:6px'>"
+        "🟢 LIVE connector</span> &nbsp; "
+        "<span style='background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:6px'>"
+        "🟡 curated / seeded</span> &nbsp; "
+        "<span style='background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:6px'>"
+        "🔵 client-side action</span>",
+        unsafe_allow_html=True,
+    )
+
+    if skin.live:
+        st.divider()
+        st.markdown("**Wired resources**")
+        st.caption(f"🧠 Model · `{settings.model}` @ `{settings.display_endpoint}`")
+        st.caption(f"🗄️ Fabric connection · `{eff.fabric_connection_id.split('/')[-1]}`")
+        st.caption(f"📄 Search index · `{eff.search_index_name}`")
+        if skin.id == "field_response":
+            st.caption(
+                "🌐 Web · **curated situation snapshot** (hybrid) — the field sitrep is "
+                "pinned so the outbreak / border-closure override is deterministic on "
+                "stage; Fabric + Docs are fully live."
+            )
+        else:
+            st.caption("🌐 Web · `Bing grounding` (live)")
+        team = active_team(eff, skin.id)
+        roster = " · ".join(f"{s.icon} {s.persisted_name}" for s in team)
+        st.caption(f"🤝 Team · {MANAGER_NAME} → {roster}")
+
+
 # ---------------------------------------------------------------- sidebar
 with st.sidebar:
     st.markdown("## 🧭 Mission IQ")
@@ -66,8 +118,9 @@ with st.sidebar:
     st.divider()
     st.caption(f"🧠 {settings.model}  ·  {settings.display_endpoint}")
     if skin.live:
+        eff = settings_for_skin(settings, skin.id)
         st.markdown("**🟢 LIVE — real Foundry connectors**")
-        for p in connector_planes(settings):
+        for p in connector_planes(eff, skin):
             wired = p["wired"] == "True"
             mark = "🟢" if wired else "⚪"
             note = "" if wired else "  _(not connected)_"
@@ -80,10 +133,14 @@ with st.sidebar:
             "each owns exactly one connector."
         )
         st.caption(f"🧠 **{MANAGER_NAME}** — orchestrates the team  ·  _in-app_")
-        for spec in active_team(settings):
+        for spec in active_team(eff, skin.id):
+            persisted = (
+                "_client-side_"
+                if (spec.local_action_tools or spec.local_web_snapshot)
+                else "_persisted in Foundry_"
+            )
             st.caption(
-                f"{spec.icon} **{spec.persisted_name}** — {spec.detail}  ·  "
-                "_persisted in Foundry_"
+                f"{spec.icon} **{spec.persisted_name}** — {spec.detail}  ·  {persisted}"
             )
     else:
         st.caption("Planes: 🗄️ Fabric · 🌐 Web · 📄 Docs · 💼 Work IQ  ·  _seeded demo_")
@@ -93,6 +150,18 @@ with st.sidebar:
 # Keep a separate transcript per skin so switching missions is a clean slate.
 store = st.session_state.setdefault("transcripts", {})
 messages = store.setdefault(skin_id, [])
+
+view = st.radio(
+    "View",
+    ["🛰️ Cockpit", "🔌 Connections"],
+    horizontal=True,
+    label_visibility="collapsed",
+    key=f"view_{skin_id}",
+)
+
+if view == "🔌 Connections":
+    render_connections(skin, settings)
+    st.stop()
 
 st.markdown(f"### {skin.icon} {skin.name} — Cockpit")
 st.caption(skin.tagline)

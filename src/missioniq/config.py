@@ -88,6 +88,43 @@ def load_settings() -> Settings:
     )
 
 
+# --- per-skin live resource overrides --------------------------------------
+#
+# A live skin resolves its OWN Fabric Data Agent connection and its OWN docs
+# index; the AI Search *service* connection and the Bing connection are shared.
+# Fundraising uses the base Settings defaults; any skin not listed here inherits
+# them. This is what lets a second mission (Field Response) go live over its own
+# dedicated warehouse + Data Agent without disturbing fundraising's wiring.
+
+_SKIN_FABRIC_CONNECTIONS: dict[str, str] = {
+    "field_response": os.getenv(
+        "MISSIONIQ_FIELDRESPONSE_FABRIC_CONNECTION_ID",
+        f"{_CONN_BASE}/missioniq-fieldresponse-fabric",
+    ),
+}
+
+_SKIN_SEARCH_INDEXES: dict[str, str] = {
+    "field_response": os.getenv(
+        "MISSIONIQ_FIELDRESPONSE_SEARCH_INDEX", "missioniq-fieldresponse-docs"
+    ),
+}
+
+
+def settings_for_skin(settings: Settings, skin_id: str) -> Settings:
+    """Return Settings with this skin's Fabric connection + docs index swapped in.
+
+    Returns the same object unchanged when the skin has no overrides (fundraising),
+    so the fundraising path is byte-for-byte what it was before.
+    """
+    from dataclasses import replace
+
+    fabric = _SKIN_FABRIC_CONNECTIONS.get(skin_id, settings.fabric_connection_id)
+    index = _SKIN_SEARCH_INDEXES.get(skin_id, settings.search_index_name)
+    if fabric == settings.fabric_connection_id and index == settings.search_index_name:
+        return settings
+    return replace(settings, fabric_connection_id=fabric, search_index_name=index)
+
+
 # Toggle a real outbound web call in the web plane. Off by default so demos are
 # deterministic and offline-safe; flip to "1" to attempt live lookups.
 LIVE_WEB = os.getenv("MISSIONIQ_LIVE_WEB", "0") == "1"
