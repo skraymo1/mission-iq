@@ -44,12 +44,12 @@ Every mission is the same engine with five pluggable slots:
 | **Feedback** | Outcomes that re-tune future priorities |
 
 Swapping a skin re-themes the assistant, re-points its data planes, and re-writes
-its operating instructions — no orchestration code changes. Ships with four seeded
-missions — 🌍 Field Response · 🌀 Disaster Relief · 🩸 Blood Drive · 🎓 Youth
-Mentoring — plus the live 💝 Fundraising skin. **Field Response** is the sharpest
-cross-source demo: the live Web plane can *override* the structured data (a
-border-closure/security escalation disqualifies the obvious internal pick), proving
-the app is more than a Fabric wrapper.
+its operating instructions — no orchestration code changes. Ships with two **live**
+skins running on real Foundry/Fabric connectors — 🌍 Field Response · 💝 Fundraising —
+plus three seeded missions: 🌀 Disaster Relief · 🩸 Blood Drive · 🎓 Youth Mentoring.
+**Field Response** is the sharpest cross-source demo: the live Web plane can *override*
+the structured data (a border-closure/security escalation disqualifies the obvious
+internal pick), proving the app is more than a Fabric wrapper.
 
 ---
 
