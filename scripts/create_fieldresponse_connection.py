@@ -18,6 +18,7 @@ tenant identity (admin@MngEnvMCAP727505.onmicrosoft.com).
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -67,7 +68,9 @@ def _az_rest(method: str, url: str, body: dict | None = None) -> str:
     cmd = ["az", "rest", "--method", method, "--url", url]
     tmp: Path | None = None
     if body is not None:
-        tmp = Path(tempfile.mkstemp(suffix=".json")[1])
+        fd, path = tempfile.mkstemp(suffix=".json")
+        os.close(fd)  # Windows locks the fd; close before az reads the file
+        tmp = Path(path)
         tmp.write_text(json.dumps(body), encoding="utf-8")
         cmd += ["--body", f"@{tmp}",
                 "--headers", "Content-Type=application/json"]
@@ -77,7 +80,10 @@ def _az_rest(method: str, url: str, body: dict | None = None) -> str:
         )
     finally:
         if tmp is not None:
-            tmp.unlink(missing_ok=True)
+            try:
+                tmp.unlink()
+            except OSError:
+                pass
     if out.returncode != 0:
         raise SystemExit(f"az rest {method} failed:\n{out.stderr or out.stdout}")
     return out.stdout

@@ -34,4 +34,4 @@ sample_questions:
 # provisioning. The go-live swap is isolated: point its Fabric plane at a dedicated
 # gold warehouse (see scripts/load_field_response_warehouse.py) loaded from a real
 # Dynamics 365 workforce instance, then flip `live: true`.
-live: false
+live: true

@@ -17,6 +17,7 @@ the client-side action tools (which can't be persisted server-side).
 """
 from __future__ import annotations
 
+import json
 import os
 from typing import Any
 
@@ -36,9 +37,13 @@ from .agents_spec import (
     spec_by_key,
 )
 from .config import Settings, settings_for_skin
-from .live import build_credential, build_foundry_client, make_attribution_middleware
-from .planes.base import AgentTurn, MagenticTrace, RunContext
-from .planes.web import make_situation_tool
+from .live import (
+    build_credential,
+    build_foundry_client,
+    make_attribution_middleware,
+    make_text_only_middleware,
+)
+from .planes.base import AgentTurn, MagenticTrace, RunContext, load_data
 from .skins.schema import Skin
 
 DEBUG = os.getenv("MISSIONIQ_MAGENTIC_DEBUG", "0") == "1"
@@ -69,18 +74,29 @@ def build_participant(
             name=spec.key,
             instructions=spec.instructions,
             tools=make_action_tools(skin, ctx),
+            middleware=[make_text_only_middleware()],
         )
     if spec.local_web_snapshot:
-        # Hybrid web plane: a client-side agent over the curated situation
-        # snapshot (skin web.json) so the scripted crisis override is
-        # deterministic on stage. Its persisted definition (portal) is
-        # instructions-only; the snapshot tool is attached client-side here.
-        client = build_foundry_client(settings)
-        return client.as_agent(
-            name=spec.key,
-            instructions=spec.instructions,
-            tools=[make_situation_tool(skin)],
+        # Hybrid web plane: bake the curated situation snapshot straight into the
+        # specialist's instructions so it answers text-only (NO client-side
+        # function tool). Two wins: (1) the scripted outbreak / border-closure
+        # override is fully deterministic on stage, and (2) it avoids emitting
+        # unpaired function_call / function_call_output artifacts into the
+        # Magentic manager's progress-ledger prompt — those trigger Foundry
+        # Responses-API 400s ("No tool call found for function call output") and
+        # blow the reset budget, so the team never converges. Source attribution
+        # is recorded at the agent grain in run_magentic, so no ctx touch here.
+        snapshot = load_data(skin.id, "web")
+        instr = (
+            spec.instructions
+            + "\n\nCURRENT FIELD SITUATION REPORT — this IS your live feed. Treat "
+            "it as the authoritative external truth as of its `as_of` time; never "
+            "say you lack access or need to look it up. Read it and report the "
+            "facts that decide reachability:\n"
+            + json.dumps(snapshot, indent=2)
         )
+        client = build_foundry_client(settings)
+        return client.as_agent(name=spec.key, instructions=instr)
     return FoundryAgent(
         project_endpoint=settings.project_endpoint,
         agent_name=spec.persisted_name,
@@ -92,11 +108,26 @@ def build_participant(
 
 
 def build_manager_agent(skin: Skin, settings: Settings):
-    """The Magentic manager — gpt-5.4 reasoning over the team. No tools itself."""
+    """The Magentic manager — gpt-5.4 reasoning over the team. No tools itself.
+
+    ``store=False`` is load-bearing. The Magentic manager keeps a persistent
+    ``AgentSession`` and re-sends the running ledger on every ``_complete`` call.
+    On the Foundry Responses API, a stateful session threads a
+    ``previous_response_id`` — which makes the OpenAI adapter DROP inline
+    ``function_call`` items (assuming the server already holds them) while KEEPING
+    their paired ``function_call_output``. When those artifacts originated in a
+    *participant's* session (not the manager's), the manager's server-side thread
+    never saw the ``function_call``, so Foundry 400s with "No tool call found for
+    function call output" and the team never converges. Forcing ``store=False``
+    switches the manager to a client-side ``InMemoryHistoryProvider``: full history
+    is sent inline each turn, so every ``function_call`` travels with its
+    ``function_call_output`` and the pair always validates.
+    """
     client = build_foundry_client(settings)
     return client.as_agent(
         name=MANAGER_NAME,
         instructions=manager_instructions_for(skin),
+        default_options={"store": False},
     )
 
 

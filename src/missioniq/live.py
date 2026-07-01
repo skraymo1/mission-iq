@@ -15,7 +15,7 @@ cross-source + action story, on real plumbing.
 from __future__ import annotations
 
 from azure.identity import AzureCliCredential, DefaultAzureCredential
-from agent_framework import ChatContext, chat_middleware
+from agent_framework import AgentContext, ChatContext, agent_middleware, chat_middleware
 from agent_framework.foundry import FoundryChatClient
 
 from .actions import make_action_tools
@@ -193,6 +193,55 @@ def _item_plane(item_type: str) -> tuple[str, str, str] | None:
         if needle in t:
             return plane
     return None
+
+
+_TOOL_ARTIFACT_TYPES = {"function_call", "function_result"}
+
+
+def make_text_only_middleware():
+    """Agent middleware that drops tool-call artifacts from a participant's output.
+
+    Client-side specialists (local Python action tools) return their FULL turn
+    history — including `function_call` / `function_result` content — in the
+    AgentResponse. When those messages land in the Magentic manager's shared
+    `chat_history`, the manager's Foundry Responses-API call serializes a
+    `function_call_output` whose paired `function_call` was dropped (participant-
+    authored tool calls don't survive the manager's history assembly). Foundry then
+    rejects the ledger request with HTTP 400 "No tool call found for function call
+    output", which burns the reset budget so the team never converges.
+
+    The manager only needs each specialist's PROSE, so we strip tool artifacts from
+    the response before it propagates. Filtering on the content `.type` discriminator
+    keeps this robust across agent-framework versions. Attribution runs as a
+    chat-middleware *inside* the agent run (before this post-processing), so chip
+    attribution is unaffected.
+    """
+
+    @agent_middleware
+    async def _text_only(context: AgentContext, call_next) -> None:
+        await call_next()
+        res = context.result
+        msgs = getattr(res, "messages", None)
+        if not msgs:
+            return
+        kept_msgs = []
+        for msg in msgs:
+            contents = getattr(msg, "contents", None) or []
+            kept = [c for c in contents
+                    if getattr(c, "type", None) not in _TOOL_ARTIFACT_TYPES]
+            if not kept:
+                continue
+            try:
+                msg.contents = kept
+            except Exception:  # pragma: no cover - frozen model fallback
+                continue
+            kept_msgs.append(msg)
+        try:
+            res.messages = kept_msgs
+        except Exception:  # pragma: no cover
+            pass
+
+    return _text_only
 
 
 def make_attribution_middleware(ctx: RunContext):
