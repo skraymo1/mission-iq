@@ -1,0 +1,11 @@
+{
+  "source": "Foundry IQ - Deployment protocols, medical & security SOPs (seeded)",
+  "documents": [
+    {"title": "Deployment Medical & Vaccination Policy v6", "snippet": "No staff may deploy to a mission zone without CURRENT mission-critical vaccinations. Yellow Fever is mandatory and non-waivable for all Central/West/East Africa deployments; an expired or lapsed Yellow Fever record makes a candidate ineligible until re-vaccinated (min. 10 days before travel). Cholera oral vaccination is required for cholera-response missions. Verify Hep A/B, Typhoid, and Meningitis are in date."},
+    {"title": "Security & Duty-of-Care SOP v4", "snippet": "Deployment must respect the current security advisory level for the destination AND the staff member's current location and transit route. Do not route staff through or out of any area under a Level 4 (no non-essential travel) advisory or an active border closure. If a candidate cannot legally and safely reach the zone within the mission window, they are not deployable regardless of skills. Non-cleared staff stage at the nearest safe hub."},
+    {"title": "Rotation & Fatigue Policy", "snippet": "Mandatory rest applies after any mission of 6 weeks or longer. Staff flagged Recovering or with a rest-until date in the future must NOT be redeployed before that date, even for a critical mission. Check rest-until before proposing anyone."},
+    {"title": "Travel Readiness & Documentation", "snippet": "Passports must be valid for at least 6 months beyond the deployment date; an expired passport is an automatic disqualifier for international deployment. Confirm the destination visa or emergency-travel arrangement is achievable within the window before committing a candidate."},
+    {"title": "First-Mission Pairing Rule", "snippet": "Any staff member on their first field mission must be paired with a veteran (3+ completed deployments) for the duration. Do not deploy a first-mission responder solo."},
+    {"title": "Deployment Offer Tone Guide", "snippet": "Deployment offers must state the role, destination, report-by time, mission duration, and a single confirm action. Be direct and warm; acknowledge the short notice. Note any pending clearance (visa, vaccination re-check) the candidate must complete before travel."}
+  ]
+}

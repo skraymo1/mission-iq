@@ -1,0 +1,10 @@
+{
+  "source": "Foundry IQ — Development office policies & playbooks (seeded)",
+  "documents": [
+    {"title": "Gift Acceptance Policy v4", "snippet": "Gifts of publicly traded securities are accepted and liquidated within 3 business days of receipt. Gifts-in-kind over $5,000 require a qualified appraisal and Director of Development sign-off. The organization declines gifts with donor-imposed restrictions that conflict with mission or that obligate spending beyond program capacity. All gifts $25,000 and above require a signed gift agreement."},
+    {"title": "Major Gift Stewardship SOP", "snippet": "Donors with lifetime giving of $10,000+ are assigned a gift officer and must receive a personal touch at least once per quarter. A thank-you call within 48 hours is required for any gift of $1,000 or more. Lapsed major donors (no gift in 9+ months) enter the reactivation track and are prioritized for a personal ask before any mass appeal."},
+    {"title": "Year-End Campaign Playbook", "snippet": "The December 31 deadline drives roughly 30% of annual individual revenue. Sequence: personal asks to major and lapsed-major donors first (by Dec 10), then segmented email to mid-level donors, then a broad final-48-hours push. Lead every ask with last year's specific impact for that donor. Always offer a matching-gift moment when one is available."},
+    {"title": "Donor Contact & Consent Rules", "snippet": "Honor every do-not-solicit and do-not-contact flag without exception. Respect channel preferences (email vs phone vs mail). Cap solicitations at one major ask per donor per quarter to avoid over-asking. Anonymous donors must never be named in public stewardship or marketing without explicit written consent."},
+    {"title": "Wealth Screening Interpretation Guide", "snippet": "CapacityRange estimates a donor's ability to give a major gift; ConstituentRating (Low/Medium/High/Exceptional) blends capacity with demonstrated affinity. Prioritize High and Exceptional ratings with a CapacityRange of $100,000+ for major-gift cultivation. Capacity is potential, not a pledge — always pair it with engagement and recency before making an ask."}
+  ]
+}

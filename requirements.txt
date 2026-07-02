@@ -1,0 +1,8 @@
+# Mission IQ dependencies. Microsoft Agent Framework is pre-release:
+#   pip install --pre -r requirements.txt
+agent-framework==1.9.0
+azure-identity==1.26.0b2
+streamlit==1.58.0
+PyYAML==6.0.3
+python-dotenv==1.2.2
+httpx==0.28.1

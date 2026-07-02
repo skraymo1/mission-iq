@@ -1,0 +1,26 @@
+id: blood_drive
+name: Blood Drive
+icon: "🩸"
+accent: "#b91c1c"
+tagline: "Close the gap on every blood type before the appointment slots run out."
+entity: donors
+
+demand: >
+  Blood demand by type and hospital — current shortages, upcoming surgeries, and
+  drives that are under-booked for specific blood types.
+supply: >
+  Eligible donors matched on blood type, last-donation eligibility window,
+  proximity, and reliability — plus drive capacity and phlebotomist hours.
+guardrails: >
+  Respect donation-interval eligibility, deferral rules, age and health criteria,
+  and never over-book a drive past its staffing.
+impact: >
+  Units collected toward each shortfall and donors converted to recurring givers.
+feedback: >
+  Show-up rates, units actually collected, and repeat-donation behavior tune who
+  to call first next time.
+
+sample_questions:
+  - "We're 12 O-negative units short for tomorrow — who do we call?"
+  - "Which lapsed donors near downtown are eligible again this week?"
+  - "Draft a reminder text to everyone booked for Saturday's drive."

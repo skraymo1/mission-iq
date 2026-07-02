@@ -1,0 +1,27 @@
+id: mentoring
+name: Youth Mentoring
+icon: "🎓"
+accent: "#7c3aed"
+tagline: "Match the right mentor to the student who needs them most, right now."
+entity: mentors
+
+demand: >
+  Students needing support — flagged by slipping attendance, grades, or
+  engagement, ranked by how urgently an intervention is needed.
+supply: >
+  Mentors matched on subject expertise, availability, language, and shared
+  interests — plus program slots and meeting space.
+guardrails: >
+  Require background-check clearance, honor scheduling and location constraints,
+  and respect caseload caps so no mentor is overloaded.
+impact: >
+  Attendance and grade lift per mentoring hour, and students kept on track to
+  graduate.
+feedback: >
+  Session attendance, grade trajectory, and student feedback re-rank who needs a
+  match next.
+
+sample_questions:
+  - "Which students are slipping and who's the right mentor for each?"
+  - "Find an available Spanish-speaking math mentor near the east campus."
+  - "Draft an intro message pairing Mr. Allen with the three flagged students."

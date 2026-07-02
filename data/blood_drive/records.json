@@ -1,0 +1,17 @@
+{
+  "entity": "donors",
+  "source": "Dynamics 365 → Fabric (Donor CRM) — seeded mirror",
+  "records": [
+    {"name": "Carlos Mendez", "blood_type": "O-", "city": "Houston", "neighborhood": "Downtown", "distance_mi": 1.8, "last_donation_days_ago": 64, "eligible": true, "reliability": 0.95, "phone": "+1-713-555-0201"},
+    {"name": "Priya Nair", "blood_type": "O-", "city": "Houston", "neighborhood": "Midtown", "distance_mi": 3.1, "last_donation_days_ago": 92, "eligible": true, "reliability": 0.9, "phone": "+1-713-555-0202"},
+    {"name": "Tom Becker", "blood_type": "O-", "city": "Houston", "neighborhood": "Heights", "distance_mi": 5.4, "last_donation_days_ago": 41, "eligible": false, "reliability": 0.88, "phone": "+1-713-555-0203"},
+    {"name": "Lena Park", "blood_type": "O+", "city": "Houston", "neighborhood": "Downtown", "distance_mi": 2.2, "last_donation_days_ago": 120, "eligible": true, "reliability": 0.86, "phone": "+1-713-555-0204"},
+    {"name": "Greg Owusu", "blood_type": "O-", "city": "Bellaire", "neighborhood": "Bellaire", "distance_mi": 8.0, "last_donation_days_ago": 70, "eligible": true, "reliability": 0.83, "phone": "+1-713-555-0205"},
+    {"name": "Hannah Cole", "blood_type": "A-", "city": "Houston", "neighborhood": "Montrose", "distance_mi": 3.9, "last_donation_days_ago": 200, "eligible": true, "reliability": 0.78, "phone": "+1-713-555-0206"},
+    {"name": "Diego Santos", "blood_type": "O-", "city": "Houston", "neighborhood": "EaDo", "distance_mi": 2.7, "last_donation_days_ago": 58, "eligible": true, "reliability": 0.92, "phone": "+1-713-555-0207"}
+  ],
+  "needs": [
+    {"type": "O-", "hospital": "Texas Medical Center", "units_short": 12, "needed_by": "tomorrow 9 AM"},
+    {"type": "A-", "hospital": "Memorial Hermann", "units_short": 4, "needed_by": "Friday"}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "source": "Foundry IQ — Donor program docs (seeded)",
+  "documents": [
+    {"title": "Donation Eligibility Quick Reference", "snippet": "Whole-blood donors must wait 56 days between donations. Confirm eligibility window before calling; never book an ineligible donor."},
+    {"title": "O-negative Priority Protocol", "snippet": "O- is the universal red-cell donor. During a shortage, prioritize eligible O- donors within 10 miles and known reliable show-ups."},
+    {"title": "Outreach Tone Guide", "snippet": "Reminder texts should be warm, name the drive time and location, and include a one-tap confirm. Keep under 320 characters."}
+  ]
+}

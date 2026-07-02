@@ -1,0 +1,9 @@
+{
+  "source": "Live web — district & community info (seeded snapshot)",
+  "as_of": "this week",
+  "items": [
+    {"headline": "East campus after-school hours extended to 6 PM", "detail": "More room for Tue/Wed/Thu mentoring sessions on the east campus.", "severity": "low"},
+    {"headline": "District grant supports STEM tutoring", "detail": "Math and science mentoring sessions are reimbursable this semester.", "severity": "low"},
+    {"headline": "Bus route 12 schedule change", "detail": "Later pickup near east campus; mentors should plan sessions to end by 5:45 PM.", "severity": "moderate"}
+  ]
+}

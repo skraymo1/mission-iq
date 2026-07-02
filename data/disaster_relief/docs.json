@@ -1,0 +1,9 @@
+{
+  "source": "Foundry IQ — Operations docs & SOPs (seeded)",
+  "documents": [
+    {"title": "Shelter Surge SOP v3", "snippet": "When medical triage waiting exceeds 10, dispatch at least one EMT-B or RN per 50 evacuees. Pair any first-deployment volunteer with a veteran for the first shift."},
+    {"title": "Volunteer Safety & Fatigue Policy", "snippet": "Cap continuous field shifts at 12 hours. Do not route volunteers through zones under an active flash-flood warning. Swiftwater-only personnel for water rescue."},
+    {"title": "Credentialing Requirements", "snippet": "Restricted evacuation corridors (e.g., mandatory-evac zones) require agency credentials; non-credentialed responders must stage at the nearest safe corridor."},
+    {"title": "Outreach Tone Guide", "snippet": "Urgent callouts should state location, role needed, start time, and a single confirm action. Keep under 320 characters for SMS."}
+  ]
+}

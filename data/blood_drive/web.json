@@ -1,0 +1,9 @@
+{
+  "source": "Live web — local conditions (seeded snapshot)",
+  "as_of": "today, 2:15 PM CT",
+  "items": [
+    {"headline": "Clear weather through the weekend", "detail": "No travel disruptions expected; good turnout conditions for Saturday's drive.", "severity": "low"},
+    {"headline": "TMC parking garage 4 closed for maintenance", "detail": "Direct donors to garage 6; adds ~5 min walk to the donor center.", "severity": "moderate"},
+    {"headline": "Local news ran a shortage story this morning", "detail": "Regional O-negative supply at 1.5 days; public awareness elevated — good moment to ask.", "severity": "low"}
+  ]
+}

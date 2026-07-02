@@ -1,0 +1,20 @@
+{
+  "entity": "volunteers",
+  "source": "Dynamics 365 → Fabric (Volunteer Engagement) — seeded mirror",
+  "records": [
+    {"name": "Maria Delgado", "skills": ["EMT", "first aid"], "certs": ["EMT-B", "CPR"], "city": "Houston", "zone": "Zone 4", "distance_mi": 4.2, "reliability": 0.96, "available_tonight": true, "veteran": true, "phone": "+1-713-555-0142"},
+    {"name": "Jon Whitaker", "skills": ["driver", "logistics"], "certs": ["CDL"], "city": "Houston", "zone": "Zone 2", "distance_mi": 7.1, "reliability": 0.88, "available_tonight": true, "veteran": true, "phone": "+1-713-555-0188"},
+    {"name": "Aisha Bello", "skills": ["shelter ops", "intake"], "certs": ["Shelter Mgmt"], "city": "Houston", "zone": "Zone 4", "distance_mi": 2.0, "reliability": 0.93, "available_tonight": true, "veteran": false, "phone": "+1-713-555-0110"},
+    {"name": "David Okafor", "skills": ["nurse", "triage"], "certs": ["RN", "CPR"], "city": "Houston", "zone": "Zone 4", "distance_mi": 5.6, "reliability": 0.90, "available_tonight": true, "veteran": true, "phone": "+1-713-555-0173"},
+    {"name": "Grace Lin", "skills": ["translator", "intake"], "certs": ["Mandarin", "Spanish"], "city": "Houston", "zone": "Zone 3", "distance_mi": 9.4, "reliability": 0.85, "available_tonight": true, "veteran": false, "phone": "+1-713-555-0129"},
+    {"name": "Tariq Hassan", "skills": ["search and rescue", "swift water"], "certs": ["SAR", "Swiftwater"], "city": "Katy", "zone": "Zone 5", "distance_mi": 18.3, "reliability": 0.91, "available_tonight": false, "veteran": true, "phone": "+1-281-555-0155"},
+    {"name": "Emily Carter", "skills": ["counselor", "trauma support"], "certs": ["LCSW"], "city": "Houston", "zone": "Zone 1", "distance_mi": 11.7, "reliability": 0.82, "available_tonight": true, "veteran": false, "phone": "+1-713-555-0164"},
+    {"name": "Sam Reyes", "skills": ["driver", "supply"], "certs": ["CDL"], "city": "Pasadena", "zone": "Zone 6", "distance_mi": 14.0, "reliability": 0.79, "available_tonight": true, "veteran": false, "phone": "+1-713-555-0198"},
+    {"name": "Nadia Petrov", "skills": ["EMT", "logistics"], "certs": ["EMT-B"], "city": "Houston", "zone": "Zone 2", "distance_mi": 6.3, "reliability": 0.94, "available_tonight": false, "veteran": true, "phone": "+1-713-555-0137"},
+    {"name": "Marcus Lee", "skills": ["shelter ops", "food service"], "certs": ["Food Safety"], "city": "Houston", "zone": "Zone 4", "distance_mi": 3.4, "reliability": 0.87, "available_tonight": true, "veteran": false, "phone": "+1-713-555-0121"}
+  ],
+  "needs": [
+    {"zone": "Zone 4", "shelter": "George R. Brown Convention Center", "intake_surge": "high", "open_cots": 220, "medical_triage_waiting": 14, "needs": ["EMT", "intake", "translator"]},
+    {"zone": "Zone 2", "shelter": "Houston Food Bank Annex", "intake_surge": "moderate", "open_cots": 80, "medical_triage_waiting": 3, "needs": ["driver", "shelter ops"]}
+  ]
+}
